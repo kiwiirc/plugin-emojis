@@ -1,0 +1,27 @@
+{
+	"name": "starry-plugin-kiwiirc",
+	"version": "0.1.0",
+	"main": "plugin.js",
+	"license": "UNLICENSED",
+	"private": true,
+	"scripts": {
+		"build": "webpack",
+		"watch": "webpack --watch",
+		"serve": "webpack-dev-server",
+		"test": "xo"
+	},
+	"dependencies": {
+		"emoji-mart-vue": "^2.5.3",
+		"uppy": "^0.23.3",
+		"vue": "^2.5.16"
+	},
+	"devDependencies": {
+		"css-loader": "^0.28.11",
+		"style-loader": "^0.20.3",
+		"vue-loader": "^14.2.2",
+		"webpack": "^4.8.3",
+		"webpack-cli": "^2.0.13",
+		"webpack-dev-server": "^3.1.1",
+		"xo": "^0.20.3"
+	}
+}
