@@ -1,11 +1,10 @@
-# KiwiIRC - Starry Plugin
+# KiwiIRC - Emoji Plugin
 
-This plugin adds an animated starfield to KiwiIRC's UI. 
+This plugin adds an emoji picker to KiwiIRC's UI. 
 
 
-    "starry":{ "color": "#a1a" },
     "plugins": [
-        {"name": "starryPlugin", "url": "/static/plugins/plugin-starry/dist/main.js"} 
+        {"name": "emoji", "url": "/static/plugins/plugin-emoji/dist/main.js"} 
     ]
   
   
