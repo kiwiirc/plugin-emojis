@@ -34,19 +34,21 @@ kiwi.plugin('emoji', function (kiwi, log) {
       mounted () {
         this.x = this.c.getContext('2d');
         this.sprites.setAttribute('crossOrigin', 'Anonymous')
-        this.sprites.src = './static/plugins/plugin-emoji/64.png';
+        this.sprites.src = './static/plugins/plugin-emoji/32.png';
       },
       methods: {
         onEmojiSelected (emoji) {
           this.$nextTick(function () {
-            this.c.width = 64;
-            this.c.height = 64;
-            let bgp = window.bgp.split(' ');
-            let posX = (bgp[0].substring(0, bgp[0].length-1) / 102) * this.sprites.width;
-            let posY = (bgp[1].substring(0, bgp[1].length-1) / 102) * this.sprites.height;
-            this.x.drawImage(this.sprites, posX, posY, 64, 64, 0, 0, 64, 64);
-            let dataURL = this.c.toDataURL();
-            emojiTool.controlinput.$refs.input.addImg(emoji.colons, dataURL);
+            if (window.bgp) {
+              this.c.width = 64;
+              this.c.height = 64;
+              let bgp = window.bgp.split(' ');
+              let posX = (bgp[0].substring(0, bgp[0].length-1) / 102) * this.sprites.width;
+              let posY = (bgp[1].substring(0, bgp[1].length-1) / 102) * this.sprites.height;
+              this.x.drawImage(this.sprites, posX, posY, 32, 32, 0, 0, 64, 64);
+              let dataURL = this.c.toDataURL();
+              emojiTool.controlinput.$refs.input.addImg(emoji.colons, dataURL);
+            }
           });
         }
       }
