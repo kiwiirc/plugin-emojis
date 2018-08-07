@@ -1,9 +1,8 @@
-import { Picker } from 'emoji-mart-vue'
+import { Emoji, Picker } from 'emoji-mart-vue'
 
 kiwi.plugin('emoji', function (kiwi, log) {
 
     const sprites = new Image();
-    sprites.src = './static/plugins/plugin-emoji/32.png';
     sprites.onload = function () {
       const emojiTool = document.createElement('i');
       emojiTool.className = 'fa fa-thumbs-up';
@@ -21,7 +20,7 @@ kiwi.plugin('emoji', function (kiwi, log) {
       const MyComponent = window.kiwi.Vue.extend({
         template: `
           <div>
-              <picker set="emojione" :style="{ position: 'absolute', zIndex: 10, bottom: '60px', right: '20px' }" title="Pick your emoji…" emoji="point_up"  @select="onEmojiSelected" />
+              <picker set="emojione" native="true" :style="{ position: 'absolute', zIndex: 10, bottom: '60px', right: '20px' }" title="Pick your emoji…" emoji="point_up"  @select="onEmojiSelected" />
           </div>`,
         components: {
           Picker
@@ -41,6 +40,7 @@ kiwi.plugin('emoji', function (kiwi, log) {
         methods: {
           onEmojiSelected (emoji) {
             this.$nextTick(function () {
+              emojiTool.controlinput.$refs.input.insertText(emoji.native);
               if (window.bgp) {
                 this.c.width = 64;
                 this.c.height = 64;
@@ -74,5 +74,6 @@ kiwi.plugin('emoji', function (kiwi, log) {
           document.querySelector('body').removeChild(emojiPicker.$el);
           pickerVisible = false;
       }
-    }
+  }
+ sprites.src = 'static/plugins/plugin-emoji/32.png';
 })
