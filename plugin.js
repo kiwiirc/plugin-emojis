@@ -17,6 +17,19 @@ kiwi.plugin('emoji', function (kiwi, log) {
 
     let pickerVisible = false;
 
+    kiwi.on('message.poststyle', (event) => {
+      if ( platform.name !== 'IE') return;
+      if (event.message.type !== 'privmsg') return;
+      let split = [...event.message.html];
+      for(let i = 0; i < split.length; ++i) {
+        if (split[i].length > 1) {
+          let unified = ((split[i].charCodeAt(0) - 0xD800) * 0x400 + split[i].charCodeAt(1) - 0xDC00 + 0x10000).toString(16);
+          split[i] = `<img width=16 src="${kiwi.state.settings.emojiLocation + unified}.png">`;
+        }
+      }
+      event.message.html = split.join('');
+    });
+
     const MyComponent = window.kiwi.Vue.extend({
       template: `
         <div>
@@ -28,11 +41,10 @@ kiwi.plugin('emoji', function (kiwi, log) {
       props: ['emoji', 'ircinput'],
       methods: {
         useNative () {
-            return platform.name !== 'IE' ? true : false;
+            return platform.name !== 'IE';
         },
         onEmojiSelected (emoji) {
           this.$nextTick(function () {
-            //emojiTool.controlinput.$refs.input.insertText(emoji.native);
             if(this.useNative()) {
               emojiTool.controlinput.$refs.input.insertText(emoji.native);
             } else {
