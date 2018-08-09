@@ -1,9 +1,32 @@
-import { Emoji, Picker } from 'emoji-mart-vue'
 import emojione from 'emojione'
+import { Emoji, Picker } from 'emoji-mart-vue'
 import platform from 'platform'
+import GraphemeSplitter from 'grapheme-splitter'
+// polyfill
+if (!String.prototype.includes) {
+  String.prototype.includes = function(search, start) {
+    'use strict';
+    if (typeof start !== 'number') {
+      start = 0;
+    }
+    
+    if (start + search.length > this.length) {
+      return false;
+    } else {
+      return this.indexOf(search, start) !== -1;
+    }
+  };
+}
 
 kiwi.plugin('emoji', function (kiwi, log) {
 
+    function createElementFromHTML(htmlString) {
+      var div = document.createElement('div');
+      div.innerHTML = htmlString.trim();
+      return div.firstChild; 
+    }
+
+    emojione.imagePathPNG = kiwi.state.settings.emojiLocation;
     const emojiTool = document.createElement('i');
     emojiTool.className = 'fa fa-thumbs-up';
     kiwi.addUi('input', emojiTool);
@@ -20,11 +43,12 @@ kiwi.plugin('emoji', function (kiwi, log) {
     kiwi.on('message.poststyle', (event) => {
       if ( platform.name !== 'IE') return;
       if (event.message.type !== 'privmsg') return;
-      let split = [...event.message.html];
+      let splitter = new GraphemeSplitter();
+      let split = splitter.splitGraphemes(event.message.html);
       for(let i = 0; i < split.length; ++i) {
         if (split[i].length > 1) {
-          let unified = ((split[i].charCodeAt(0) - 0xD800) * 0x400 + split[i].charCodeAt(1) - 0xDC00 + 0x10000).toString(16);
-          split[i] = `<img width=16 src="${kiwi.state.settings.emojiLocation + unified}.png">`;
+          let img = emojione.unicodeToImage(split[i]);
+          split[i] = img.substring(0,4) + ' style="width:16px;"' + img.substring(4);
         }
       }
       event.message.html = split.join('');
@@ -48,7 +72,8 @@ kiwi.plugin('emoji', function (kiwi, log) {
             if(this.useNative()) {
               emojiTool.controlinput.$refs.input.insertText(emoji.native);
             } else {
-              emojiTool.controlinput.$refs.input.addImg(emoji.native, kiwi.state.settings.emojiLocation + emoji.unified + '.png');
+              let img = createElementFromHTML(emojione.unicodeToImage(emoji.native));
+              emojiTool.controlinput.$refs.input.addImg(emoji.native, img.src);
             }
           });
         }
