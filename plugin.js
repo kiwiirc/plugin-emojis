@@ -39,7 +39,7 @@ kiwi.plugin('emoji', function (kiwi, log) {
   }
 
   let pickerVisible = false;
-  let isWindowsLessThan10 = platform.os.family.substring(0, 7).toLowerCase === 'windows' && platform.os.version < 10; 
+  let isWindowsLessThan10 = platform.os.family.substring(0, 7).toLowerCase() === 'windows' && platform.os.version < 10; 
   kiwi.on('message.poststyle', (event) => {
   if ( platform.name !== 'IE' && !isWindowsLessThan10) return;
     if (event.message.type !== 'privmsg') return;
