@@ -40,7 +40,7 @@ kiwi.plugin('emoji', function (kiwi, log) {
 
    let pickerVisible = false;
    kiwi.on('message.poststyle', (event) => {
-  if ( platform.name !== 'IE' && !(platform.os.family === 'Windows' && platform.os.version.charAt(0) === '8')) return;
+  if ( platform.name !== 'IE' && !(platform.os.family === 'Windows' && (platform.os.version.charAt(0) === '8' || platform.os.version.charAt(0) === '7'))) return;
     if (event.message.type !== 'privmsg') return;
     let splitter = new GraphemeSplitter();
     let split = splitter.splitGraphemes(event.message.html);
@@ -64,7 +64,7 @@ kiwi.plugin('emoji', function (kiwi, log) {
     props: ['emoji', 'ircinput'],
     methods: {
       useNative () {
-          return platform.name !== 'IE' && !(platform.os.family === 'Windows' && platform.os.version.charAt(0) === '8');
+          return platform.name !== 'IE' && !(platform.os.family === 'Windows' && (platform.os.version.charAt(0) === '8' || platform.os.version.charAt(0) === '7'));
       },
       onEmojiSelected (emoji) {
         this.$nextTick(function () {
