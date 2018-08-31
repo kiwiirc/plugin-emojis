@@ -54,14 +54,13 @@ kiwi.plugin('emoji', function (kiwi, log) {
   let pickerVisible = false;
   let isWindowsLessThan10 = platform.os.family.substring(0, 7).toLowerCase() === 'windows' && platform.os.version < 10; 
   kiwi.on('message.poststyle', (event) => {
-  if ( platform.name !== 'IE' && !isWindowsLessThan10) return;
     if (event.message.type !== 'privmsg') return;
     let splitter = new GraphemeSplitter();
     let split = splitter.splitGraphemes(event.message.html);
     for(let i = 0; i < split.length; ++i) {
       if (split[i].length > 1) {
         let img = emojione.unicodeToImage(split[i]);
-        split[i] = img.substring(0,4) + ' style="width:16px;"' + img.substring(4);
+        split[i] = img.substring(0,4) + (split.length === 1 ? ' style="width:32px; line-height: 2em;"' : ' style="width: 16px; line-height:1em;"') + img.substring(4);
       }
     }
     event.message.html = split.join('');
