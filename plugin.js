@@ -77,7 +77,7 @@ kiwi.plugin('emoji', function (kiwi, log) {
     props: ['emoji', 'ircinput'],
     methods: {
       useNative () {
-          return platform.name !== 'IE' && !isWindowsLessThan10;
+          return kiwi.state.ui.is_touch || (platform.name !== 'IE' && !isWindowsLessThan10);
       },
       onEmojiSelected (emoji) {
         this.$nextTick(function () {
