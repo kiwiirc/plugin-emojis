@@ -144,7 +144,7 @@ kiwi.plugin('emoji', function (kiwi, log) {
     }
 
     let pickerVisible = false;
-    let isWindowsLessThan10 = platform.os.family.substring(0, 7).toLowerCase() === 'windows' && platform.os.version < 10; 
+    let useNative = platform.os.family.substring(0, 7).toLowerCase() === 'windows' && platform.os.version >=10;
     kiwi.on('message.poststyle', (event) => {
         if (event.message.type !== 'privmsg') return;
         let splitter = new GraphemeSplitter();
@@ -163,7 +163,7 @@ kiwi.plugin('emoji', function (kiwi, log) {
             <div>
                     <picker
                         set="emojione"
-                        :native="useNative()"
+                        :native="useNative"
                         :style="{ position: 'absolute', zIndex: 10, bottom: '60px', right: '20px' }"
                         :title="titleText"
                         emoji="point_up"
@@ -203,17 +203,15 @@ kiwi.plugin('emoji', function (kiwi, log) {
                 categoriesObjectsText,
                 categoriesSymbolsText,
                 categoriesFlagsText,
-                categoriesCustomText
+                categoriesCustomText,
+                useNative
             }
         },
         props: ['emoji', 'ircinput'],
         methods: {
-            useNative () {
-                    return kiwi.state.ui.is_touch || (platform.name !== 'IE' && !isWindowsLessThan10);
-            },
             onEmojiSelected (emoji) {
                 this.$nextTick(function () {
-                    if(this.useNative()) {
+                    if(this.useNative) {
                         emojiTool.controlinput.$refs.input.insertText(emoji.native);
                     } else {
                         let img = createElementFromHTML(emojione.unicodeToImage(emoji.native));
