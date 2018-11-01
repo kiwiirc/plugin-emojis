@@ -20,4 +20,25 @@ Next, add the following config parameter to /your/kiwi/folder/static/config.json
     "plugins": [
         {"name": "emojis", "url": "static/plugins/emojis.js"} 
     ]
+
+
+Optionally, you may include (in config.json) these settings,
+changing the values as needed. Any or all of these may be
+omitted, as these defaults are used if not specified.
+
+    "emojis": {
+        "titleText": "Pick your emoji\u2026",
+        "searchText": "Search for",
+        "categoriesSearchResultsText": "Search Results",
+        "categoriesRecentText": "Recent",
+        "categoriesPeopleText": "People",
+        "categoriesNatureText": "Nature",
+        "categoriesFoodsText": "Foods",
+        "categoriesActivityText": "Activity",
+        "categoriesPlacesText": "Places",
+        "categoriesObjectsText": "Objects",
+        "categoriesSymbolsText": "Symbols",
+        "categoriesFlagsText": "Flags",
+        "categoriesCustomText": "Custom"
+    },
    

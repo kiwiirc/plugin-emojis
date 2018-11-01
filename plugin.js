@@ -33,6 +33,98 @@ kiwi.plugin('emoji', function (kiwi, log) {
         return;
     }
 
+    let titleText = '';
+    let searchText = '';
+    let categoriesSearchResultsText = '';
+    let categoriesRecentText = '';
+    let categoriesPeopleText = '';
+    let categoriesNatureText = '';
+    let categoriesFoodsText = '';
+    let categoriesActivityText = '';
+    let categoriesPlacesText = '';
+    let categoriesObjectsText = '';
+    let categoriesSymbolsText = '';
+    let categoriesFlagsText = '';
+    let categoriesCustomText = '';
+
+    if(kiwi.state.setting('emojis.titleText')) {
+        titleText = kiwi.state.setting('emojis.titleText');
+    } else {
+        titleText = 'Pick your emoji\u2026';
+    }
+
+    if(kiwi.state.setting('emojis.searchText')) {
+        searchText = kiwi.state.setting('emojis.searchText');
+    } else {
+        searchText = 'Search for';
+    }
+
+    if(kiwi.state.setting('emojis.categoriesSearchResultsText')) {
+        categoriesSearchResultsText = kiwi.state.setting('emojis.categoriesSearchResultsText');
+    } else {
+        categoriesSearchResultsText = 'Search Results';
+    }
+
+    if(kiwi.state.setting('emojis.categoriesRecentText')) {
+        categoriesRecentText = kiwi.state.setting('emojis.categoriesRecentText');
+    } else {
+        categoriesRecentText = 'Recent';
+    }
+
+    if(kiwi.state.setting('emojis.categoriesPeopleText')) {
+        categoriesPeopleText = kiwi.state.setting('emojis.categoriesPeopleText');
+    } else {
+        categoriesPeopleText = 'People';
+    }
+
+    if(kiwi.state.setting('emojis.categoriesNatureText')) {
+        categoriesNatureText = kiwi.state.setting('emojis.categoriesNatureText');
+    } else {
+        categoriesNatureText = 'Nature';
+    }
+
+    if(kiwi.state.setting('emojis.categoriesFoodsText')) {
+        categoriesFoodsText = kiwi.state.setting('emojis.categoriesFoodsText');
+    } else {
+        categoriesFoodsText = 'Foods';
+    }
+
+    if(kiwi.state.setting('emojis.categoriesActivityText')) {
+        categoriesActivityText = kiwi.state.setting('emojis.categoriesActivityText');
+    } else {
+        categoriesActivityText = 'Activity';
+    }
+
+    if(kiwi.state.setting('emojis.categoriesPlacesText')) {
+        categoriesPlacesText = kiwi.state.setting('emojis.categoriesPlacesText');
+    } else {
+        categoriesPlacesText = 'Places';
+    }
+
+    if(kiwi.state.setting('emojis.categoriesObjectsText')) {
+        categoriesObjectsText = kiwi.state.setting('emojis.categoriesObjectsText');
+    } else {
+        categoriesObjectsText = 'Objects';
+    }
+
+    if(kiwi.state.setting('emojis.categoriesSymbolsText')) {
+        categoriesSymbolsText = kiwi.state.setting('emojis.categoriesSymbolsText');
+    } else {
+        categoriesSymbolsText = 'Symbols';
+    }
+
+    if(kiwi.state.setting('emojis.categoriesFlagsText')) {
+        categoriesFlagsText = kiwi.state.setting('emojis.categoriesFlagsText');
+    } else {
+        categoriesFlagsText = 'Flags';
+    }
+
+    if(kiwi.state.setting('emojis.categoriesCustomText')) {
+        categoriesCustomText = kiwi.state.setting('emojis.categoriesCustomText');
+    } else {
+        categoriesCustomText = 'Custom';
+    }
+
     function createElementFromHTML(htmlString) {
         var div = document.createElement('div');
         div.innerHTML = htmlString.trim();
@@ -69,10 +161,50 @@ kiwi.plugin('emoji', function (kiwi, log) {
     const MyComponent = window.kiwi.Vue.extend({
         template: `
             <div>
-                    <picker set="emojione" :native="useNative()" :style="{ position: 'absolute', zIndex: 10, bottom: '60px', right: '20px' }" title="Pick your emoji…" emoji="point_up"  @select="onEmojiSelected" />
+                    <picker
+                        set="emojione"
+                        :native="useNative()"
+                        :style="{ position: 'absolute', zIndex: 10, bottom: '60px', right: '20px' }"
+                        :title="titleText"
+                        emoji="point_up"
+                        :i18n="{
+                            search: searchText,
+                            categories: {
+                                search: categoriesSearchResultsText,
+                                recent: categoriesRecentText,
+                                people: categoriesPeopleText,
+                                nature: categoriesNatureText,
+                                foods: categoriesFoodsText,
+                                activity: categoriesActivityText,
+                                places: categoriesPlacesText,
+                                objects: categoriesObjectsText,
+                                symbols: categoriesSymbolsText,
+                                flags: categoriesFlagsText,
+                                custom: categoriesCustomText
+                            }
+                        }"
+                        @select="onEmojiSelected"
+                    />
             </div>`,
         components: {
             Picker
+        },
+        data() {
+            return {
+                titleText,
+                searchText,
+                categoriesSearchResultsText,
+                categoriesRecentText,
+                categoriesPeopleText,
+                categoriesNatureText,
+                categoriesFoodsText,
+                categoriesActivityText,
+                categoriesPlacesText,
+                categoriesObjectsText,
+                categoriesSymbolsText,
+                categoriesFlagsText,
+                categoriesCustomText
+            }
         },
         props: ['emoji', 'ircinput'],
         methods: {
