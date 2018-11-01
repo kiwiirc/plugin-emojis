@@ -26,7 +26,7 @@ Optionally, you may include (in config.json) these settings,
 changing the values as needed. Any or all of these may be
 omitted, as these defaults are used if not specified.
 
-    "emojis": {
+    "pluginEmojis": {
         "titleText": "Pick your emoji\u2026",
         "searchText": "Search for",
         "categoriesSearchResultsText": "Search Results",

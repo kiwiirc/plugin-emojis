@@ -47,80 +47,80 @@ kiwi.plugin('emoji', function (kiwi, log) {
     let categoriesFlagsText = '';
     let categoriesCustomText = '';
 
-    if(kiwi.state.setting('emojis.titleText')) {
-        titleText = kiwi.state.setting('emojis.titleText');
+    if(kiwi.state.setting('pluginEmojis.titleText')) {
+        titleText = kiwi.state.setting('pluginEmojis.titleText');
     } else {
         titleText = 'Pick your emoji\u2026';
     }
 
-    if(kiwi.state.setting('emojis.searchText')) {
-        searchText = kiwi.state.setting('emojis.searchText');
+    if(kiwi.state.setting('pluginEmojis.searchText')) {
+        searchText = kiwi.state.setting('pluginEmojis.searchText');
     } else {
         searchText = 'Search for';
     }
 
-    if(kiwi.state.setting('emojis.categoriesSearchResultsText')) {
-        categoriesSearchResultsText = kiwi.state.setting('emojis.categoriesSearchResultsText');
+    if(kiwi.state.setting('pluginEmojis.categoriesSearchResultsText')) {
+        categoriesSearchResultsText = kiwi.state.setting('pluginEmojis.categoriesSearchResultsText');
     } else {
         categoriesSearchResultsText = 'Search Results';
     }
 
-    if(kiwi.state.setting('emojis.categoriesRecentText')) {
-        categoriesRecentText = kiwi.state.setting('emojis.categoriesRecentText');
+    if(kiwi.state.setting('pluginEmojis.categoriesRecentText')) {
+        categoriesRecentText = kiwi.state.setting('pluginEmojis.categoriesRecentText');
     } else {
         categoriesRecentText = 'Recent';
     }
 
-    if(kiwi.state.setting('emojis.categoriesPeopleText')) {
-        categoriesPeopleText = kiwi.state.setting('emojis.categoriesPeopleText');
+    if(kiwi.state.setting('pluginEmojis.categoriesPeopleText')) {
+        categoriesPeopleText = kiwi.state.setting('pluginEmojis.categoriesPeopleText');
     } else {
         categoriesPeopleText = 'People';
     }
 
-    if(kiwi.state.setting('emojis.categoriesNatureText')) {
-        categoriesNatureText = kiwi.state.setting('emojis.categoriesNatureText');
+    if(kiwi.state.setting('pluginEmojis.categoriesNatureText')) {
+        categoriesNatureText = kiwi.state.setting('pluginEmojis.categoriesNatureText');
     } else {
         categoriesNatureText = 'Nature';
     }
 
-    if(kiwi.state.setting('emojis.categoriesFoodsText')) {
-        categoriesFoodsText = kiwi.state.setting('emojis.categoriesFoodsText');
+    if(kiwi.state.setting('pluginEmojis.categoriesFoodsText')) {
+        categoriesFoodsText = kiwi.state.setting('pluginEmojis.categoriesFoodsText');
     } else {
         categoriesFoodsText = 'Foods';
     }
 
-    if(kiwi.state.setting('emojis.categoriesActivityText')) {
-        categoriesActivityText = kiwi.state.setting('emojis.categoriesActivityText');
+    if(kiwi.state.setting('pluginEmojis.categoriesActivityText')) {
+        categoriesActivityText = kiwi.state.setting('pluginEmojis.categoriesActivityText');
     } else {
         categoriesActivityText = 'Activity';
     }
 
-    if(kiwi.state.setting('emojis.categoriesPlacesText')) {
-        categoriesPlacesText = kiwi.state.setting('emojis.categoriesPlacesText');
+    if(kiwi.state.setting('pluginEmojis.categoriesPlacesText')) {
+        categoriesPlacesText = kiwi.state.setting('pluginEmojis.categoriesPlacesText');
     } else {
         categoriesPlacesText = 'Places';
     }
 
-    if(kiwi.state.setting('emojis.categoriesObjectsText')) {
-        categoriesObjectsText = kiwi.state.setting('emojis.categoriesObjectsText');
+    if(kiwi.state.setting('pluginEmojis.categoriesObjectsText')) {
+        categoriesObjectsText = kiwi.state.setting('pluginEmojis.categoriesObjectsText');
     } else {
         categoriesObjectsText = 'Objects';
     }
 
-    if(kiwi.state.setting('emojis.categoriesSymbolsText')) {
-        categoriesSymbolsText = kiwi.state.setting('emojis.categoriesSymbolsText');
+    if(kiwi.state.setting('pluginEmojis.categoriesSymbolsText')) {
+        categoriesSymbolsText = kiwi.state.setting('pluginEmojis.categoriesSymbolsText');
     } else {
         categoriesSymbolsText = 'Symbols';
     }
 
-    if(kiwi.state.setting('emojis.categoriesFlagsText')) {
-        categoriesFlagsText = kiwi.state.setting('emojis.categoriesFlagsText');
+    if(kiwi.state.setting('pluginEmojis.categoriesFlagsText')) {
+        categoriesFlagsText = kiwi.state.setting('pluginEmojis.categoriesFlagsText');
     } else {
         categoriesFlagsText = 'Flags';
     }
 
-    if(kiwi.state.setting('emojis.categoriesCustomText')) {
-        categoriesCustomText = kiwi.state.setting('emojis.categoriesCustomText');
+    if(kiwi.state.setting('pluginEmojis.categoriesCustomText')) {
+        categoriesCustomText = kiwi.state.setting('pluginEmojis.categoriesCustomText');
     } else {
         categoriesCustomText = 'Custom';
     }
