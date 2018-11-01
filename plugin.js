@@ -144,7 +144,8 @@ kiwi.plugin('emoji', function (kiwi, log) {
     }
 
     let pickerVisible = false;
-    let useNative = platform.os.family.substring(0, 7).toLowerCase() === 'windows' && platform.os.version >=10;
+    let useNative = (platform.os.family.substring(0, 7).toLowerCase() === 'windows' && platform.os.version >=10) ||
+                    (platform.os.family.substring(0, 4).toLowerCase() === 'os x');
     kiwi.on('message.poststyle', (event) => {
         if (event.message.type !== 'privmsg') return;
         let splitter = new GraphemeSplitter();
