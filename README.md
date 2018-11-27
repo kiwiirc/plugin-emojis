@@ -27,6 +27,19 @@ changing the values as needed. Any or all of these may be
 omitted, as these defaults are used if not specified.
 
     "pluginEmojis": {
+        "include": [
+            "recent",
+            "people",
+            "nature",
+            "foods",
+            "activity",
+            "places",
+            "objects",
+            "symbols",
+            "flags",
+            "custom"
+        ],
+        "exclude": [],
         "titleText": "Pick your emoji\u2026",
         "searchText": "Search for",
         "categoriesSearchResultsText": "Search Results",

@@ -33,6 +33,8 @@ kiwi.plugin('emoji', function (kiwi, log) {
         return;
     }
 
+    let include = [];
+    let exclude = [];
     let titleText = '';
     let searchText = '';
     let categoriesSearchResultsText = '';
@@ -46,6 +48,30 @@ kiwi.plugin('emoji', function (kiwi, log) {
     let categoriesSymbolsText = '';
     let categoriesFlagsText = '';
     let categoriesCustomText = '';
+
+    if(kiwi.state.setting('pluginEmojis.include')) {
+        include = kiwi.state.setting('pluginEmojis.include');
+    } else {
+        include = [
+            'search',
+            'recent',
+            'people',
+            'nature',
+            'foods', 
+            'activity',
+            'places',
+            'objects',
+            'symbols',
+            'flags',
+            'custom'
+        ]
+    }
+
+    if(kiwi.state.setting('pluginEmojis.exclude')) {
+        exclude = kiwi.state.setting('pluginEmojis.exclude');
+    } else {
+        exclude = [];
+    }
 
     if(kiwi.state.setting('pluginEmojis.titleText')) {
         titleText = kiwi.state.setting('pluginEmojis.titleText');
@@ -168,6 +194,8 @@ kiwi.plugin('emoji', function (kiwi, log) {
                         :style="{ position: 'absolute', zIndex: 10, bottom: '60px', right: '20px' }"
                         :title="titleText"
                         emoji="point_up"
+                        :include="include"
+                        :exclude="exclude"
                         :i18n="{
                             search: searchText,
                             categories: {
@@ -192,6 +220,8 @@ kiwi.plugin('emoji', function (kiwi, log) {
         },
         data() {
             return {
+                include,
+                exclude,
                 titleText,
                 searchText,
                 categoriesSearchResultsText,
