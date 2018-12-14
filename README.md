@@ -10,14 +10,14 @@ This plugin requires yarn.
 
     $ git clone https://github.com/kiwiirc/plugin-emojis.git
     $ cd plugin-emojis
-    $ yarn & yarn build
+    $ yarn && yarn build
 
-Copy the built `dist/main.js` file to your kiwi plugins folders.
+Copy the built `dist/plugin-emoji.min.js` file to your kiwi plugins folders.
 
 Next, add the following config parameter to /your/kiwi/folder/static/config.json
 
     "plugins": [
-        {"name": "emojis", "url": "static/plugins/dist/plugin-emoji.min.js"} 
+        {"name": "emojis", "url": "static/plugins/plugin-emoji.min.js"} 
     ]
 
 
