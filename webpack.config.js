@@ -4,6 +4,9 @@ const path = require('path');
 module.exports = {
   mode: 'development',
   entry: './plugin.js',
+  output: {
+    filename: 'plugin-emoji.min.js',
+  },
   module: {
     rules: [{
       test: /\.js$/,
