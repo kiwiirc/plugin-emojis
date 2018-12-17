@@ -10,7 +10,7 @@ if (!String.prototype.includes) {
         if (typeof start !== 'number') {
             start = 0;
         }
-        
+
         if (start + search.length > this.length) {
             return false;
         } else {
@@ -45,7 +45,7 @@ kiwi.plugin('emoji', function (kiwi, log) {
             'recent',
             'people',
             'nature',
-            'foods', 
+            'foods',
             'activity',
             'places',
             'objects',
@@ -142,7 +142,7 @@ kiwi.plugin('emoji', function (kiwi, log) {
     function createElementFromHTML(htmlString) {
         var div = document.createElement('div');
         div.innerHTML = htmlString.trim();
-        return div.firstChild; 
+        return div.firstChild;
     }
 
     emojione.imagePathPNG = kiwi.state.settings.emojiLocation;
