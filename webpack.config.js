@@ -3,9 +3,13 @@ const path = require('path');
 
 module.exports = {
   mode: 'development',
-  entry: './plugin.js',
+  entry: {
+    './dist/plugin-emoji.min': './plugin.js',
+    './dist/plugin-emoji-prelim.min': './prelim.js'
+  },
   output: {
-    filename: 'plugin-emoji.min.js',
+    path: __dirname,
+    filename: '[name].js'
   },
   module: {
     rules: [{
