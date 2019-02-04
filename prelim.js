@@ -5,7 +5,7 @@ window.mobilecheck = function() {
     return check;
 };
 
-if (window.mobilecheck()) {
+if (window.mobilecheck() || kiwi.state.ui.is_touch) {
     console.log("Mobile browser detected. Blocking installation of emoji plugin (because mobile OS's have their own emoji pickers)");
 } else {
     let script = document.createElement('script');
