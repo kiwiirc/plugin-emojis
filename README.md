@@ -17,7 +17,7 @@ Copy the built `dist/*.js` file to your kiwi plugins folders.
 Next, add the following config parameter to /your/kiwi/folder/static/config.json
 
     "plugins": [
-        {"name": "emojis", "url": "static/plugins/plugin-emoji-prelim.min.js"} 
+        {"name": "emoji", "url": "static/plugins/plugin-emoji-prelim.min.js"} 
     ]
 
 
