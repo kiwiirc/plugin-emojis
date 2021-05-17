@@ -1,33 +1,46 @@
-const fs = require('fs');
 const path = require('path');
-const UglifyJsPlugin = require('uglifyjs-webpack-plugin');
+const VueLoaderPlugin = require('vue-loader/lib/plugin');
+
+const makeSourceMap = process.argv.indexOf('--srcmap') > -1;
 
 module.exports = {
-  mode: 'development',
-  entry: {
-    './dist/plugin-emoji.min': './plugin.js',
-    './dist/plugin-emoji-prelim.min': './prelim.js'
-  },
-  output: {
-    path: __dirname,
-    filename: '[name].js'
-  },
-  module: {
-    rules: [{
-      test: /\.js$/,
-      exclude: /node_modules/,
-      loader: 'babel-loader',
-      query: {
-        presets: ['@babel/preset-env'],
-      }
-    }]
-  },
-  devServer: {
-      contentBase: path.join(__dirname, "dist"),
-      compress: true,
-      host: "0.0.0.0"
-  },
-  plugins: [
-    new UglifyJsPlugin()
-  ]
+    mode: 'production',
+    entry: './src/plugin.js',
+    output: {
+        filename: 'plugin-emojis.js',
+    },
+    performance: {
+        hints: false
+    },
+    optimization: {
+        minimize: false,
+    },
+    module: {
+        rules: [
+            {
+                test: /\.vue$/,
+                loader: 'vue-loader',
+            },
+            {
+                test: /\.js$/,
+                use: [{loader: 'babel-loader'}],
+                include: [
+                    path.join(__dirname, 'src'),
+                ]
+            },
+            {
+                test: /\.css$/,
+                use: [ 'style-loader', 'css-loader' ]
+            },
+        ]
+    },
+    plugins: [
+        new VueLoaderPlugin(),
+    ],
+    devtool: makeSourceMap ? 'source-map' : '',
+    devServer: {
+        filename: 'plugin-emojis.js',
+        contentBase: path.join(__dirname, "dist"),
+        port: 9000
+    }
 };

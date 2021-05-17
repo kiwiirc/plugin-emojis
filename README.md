@@ -1,56 +1,109 @@
-# KiwiIRC - Emoji Plugin
+# KiwiIRC - Audio / Video conferencing
 
-### Status - In development
+This plugin integrates the [Jitsi Meet](https://jitsi.org/jitsi-meet/) conference software into KiwiIRC.
 
-This plugin adds an emoji picker to KiwiIRC's UI. 
+Features -
+* Individual conference rooms for channels and private messages
+* Video, audio, or both, directly within Kiwi IRC itself
+* Continue using Kiwi IRC and other channels without dropping the conference call
+* Channel operators automatically promoted to conference room moderators
 
-This plugin requires yarn.
+### Building
+~~~shell
+yarn && yarn build
+~~~
 
-### Installation
+Copy `dist/plugin-conference.js` to your Kiwi plugins folder
 
-    $ git clone https://github.com/kiwiirc/plugin-emojis.git
-    $ cd plugin-emojis
-    $ yarn && yarn build
+### Loading the plugin into Kiwi IRC
+Add the plugin javascript file to your kiwiirc `config.json` and configure the settings:
 
-Copy the built `dist/*.js` file to your kiwi plugins folders.
-
-Next, add the following config parameter to /your/kiwi/folder/static/config.json
-
+```json
+{
     "plugins": [
-        {"name": "emoji", "url": "static/plugins/plugin-emoji-prelim.min.js"} 
-    ]
+        {
+            "name": "conference",
+            "url": "static/plugins/plugin-conference/dist/plugin-conference.js"
+        }
+    ],
+    "plugin-conference": {
+        "server": "meet.jit.si",
+        "secure": false
+    }
+}
+```
 
+### Security note!
+By default, this plugin uses Jisti's public servers. It should be noted that by using these public servers, your conference calls are not secure in that anybody can join them if they can guess the room name.
 
-Optionally, you may include (in config.json) these settings,
-changing the values as needed. Any or all of these may be
-omitted, as these defaults are used if not specified.
+Note that the "secure" option enables JWT authentication, but will not work on Jitsi's public server.
 
-    "pluginEmojis": {
-        "include": [
-            "recent",
-            "people",
-            "nature",
-            "foods",
-            "activity",
-            "places",
-            "objects",
-            "symbols",
-            "flags",
-            "custom"
+### Extra configuration
+Jitsi Meet supports extra configuration to customise its interface and functions. You can configure these via the optional `interfaceConfigOverwrite` and `configOverwrite` config options.
+
+The defaults are:
+~~~json
+"plugin-conference": {
+    "secure": false,
+    "server": "meet.jit.si",
+    "queries": true,
+    "channels": true,
+    "enabledInChannels": ["*"],
+    "groupInvitesTTL": 30000,
+    "maxParticipantsLength": 60,
+    "participantsMore": "more...",
+    "inviteText": "{{ nick }} is inviting you to a private call.",
+    "joinText": "{{ nick }} has joined the conference.",
+    "joinButtonText": "Join now!",
+    "showLink": false,
+    "useLinkShortener": false,
+    "linkShortenerURL": "https://x0.no/api/?{{ link }}",
+    "linkShortenerAPIToken": "API_KEY_HERE",
+    "interfaceConfigOverwrite": {
+        "SHOW_JITSI_WATERMARK": false,
+        "SHOW_WATERMARK_FOR_GUESTS": false,
+        "TOOLBAR_BUTTONS": [
+            "microphone", "camera", "fullscreen", "hangup",
+            "settings", "videoquality", "filmstrip", "fodeviceselection",
+            "stats", "shortcuts",
         ],
-        "exclude": [],
-        "titleText": "Pick your emoji\u2026",
-        "searchText": "Search for",
-        "categoriesSearchResultsText": "Search Results",
-        "categoriesRecentText": "Recent",
-        "categoriesPeopleText": "People",
-        "categoriesNatureText": "Nature",
-        "categoriesFoodsText": "Foods",
-        "categoriesActivityText": "Activity",
-        "categoriesPlacesText": "Places",
-        "categoriesObjectsText": "Objects",
-        "categoriesSymbolsText": "Symbols",
-        "categoriesFlagsText": "Flags",
-        "categoriesCustomText": "Custom"
     },
-   
+    "configOverwrite": {
+        "startWithVideoMuted": true,
+        "startWithAudioMuted": true,
+    },
+}
+~~~
+
+The 'showLink' item, if enabled, will append a direct link to the broadcasted join message which opens the jitsi conference for non-Kiwi users.
+The 'useUseLinkShortener' item, if enabled (requires showLink to also be enabled), will shorten the link displayed using a link shortening service like Bitly. If you like, yout can sign up for a free Bitly account to use the API (https://bitly.com/). Once registered, follow the instructions to generate an access token, then provide that in Kiwi's config @ "linkShortenerAPIToken". Note that some services, like x0.no do not require API tokens, in which case the token can be omitted.
+
+Examples of linkShortenerURL data are:
+
+If using Bitly:
+
+    `https://api-ssl.bitly.com/v3/shorten`
+
+Alternative shortener that doesn't require an API token:
+
+    `https://x0.no/api/?{{ link }}`
+
+note: for link shorteners other than Bitly `{{ link }}` is replaced with the conference url and the response is read from the body
+
+More info about Jitsi's options can be found in these files:
+* https://github.com/jitsi/jitsi-meet/blob/master/interface_config.js
+* https://github.com/jitsi/jitsi-meet/blob/master/config.js
+
+You may also choose to hide the conference call icon in either channels or private messages:
+```json
+{
+    "channels": false,
+    "queries": false
+}
+```
+### Running your own conference server
+Running your own conference server allows you to secure your conference rooms. We make use of the Jitsi Meet server to handle the conference calls, the installation steps can be found here: https://github.com/jitsi/jitsi-meet/blob/master/doc/quick-install.md
+
+## License
+
+[ Licensed under the Apache License, Version 2.0](LICENSE).
