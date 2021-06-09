@@ -1,12 +1,16 @@
 /* global _:true */
 /* global kiwi:true */
 
+import GraphemeSplitter from 'grapheme-splitter';
+
 export default class EmojiProvider {
     constructor(emojiIndex) {
         const state = kiwi.state;
         this.emojiLocation = state.setting('emojiLocation');
         this.emojiList = state.setting('emojis');
         this.emojiIndex = emojiIndex;
+
+        this.splitter = new GraphemeSplitter();
     }
 
     matchEmoji(word) {
@@ -14,9 +18,19 @@ export default class EmojiProvider {
         if (!emoji) {
             return false;
         }
+
+        console.log('match', {
+            index: emoji.matchDetail.index,
+            match: emoji.matchDetail.match,
+            type: 'emoji',
+            meta: {
+                emoji: emoji,
+            },
+        });
+
         return {
-            index: 0,
-            match: word,
+            index: emoji.matchDetail.index,
+            match: emoji.matchDetail.match,
             type: 'emoji',
             meta: {
                 emoji: emoji,
@@ -37,14 +51,41 @@ export default class EmojiProvider {
     }
 
     getEmoji(word) {
+        console.log('getEmoji', word);
         let emojiRaw = null;
+        let index = 0;
+        let match = '';
+
         if (this.emojiIndex._emoticons.hasOwnProperty && this.emojiIndex._emoticons.hasOwnProperty(word)) {
             emojiRaw = this.emojiIndex.findEmoji(this.emojiIndex._emoticons[word]);
+            match = word;
         }
 
-        if (word.indexOf(':') === 0 && word.lastIndexOf(':') === word.length -1) {
+        if (!emojiRaw && word.indexOf(':') === 0 && word.lastIndexOf(':') === word.length -1) {
             emojiRaw = this.emojiIndex.findEmoji(word);
+            match = word;
         }
+
+        if (!emojiRaw) {
+            emojiRaw = this.emojiIndex.nativeEmoji(word);
+            match = word;
+        }
+
+        if (!emojiRaw && /\p{Extended_Pictographic}/u.test(word)) {
+            let graphemes = this.splitter.splitGraphemes(word);
+            for (const grapheme of graphemes) {
+                console.log('grapheme', grapheme);
+                let emoji = this.emojiIndex.nativeEmoji(grapheme);
+                if (emoji) {
+                    index = word.indexOf(grapheme);
+                    match = grapheme;
+                    console.log('match', emoji);
+                    emojiRaw = emoji;
+                    break;
+                }
+            }
+        }
+
 
         if (!emojiRaw) {
             return false;
@@ -59,6 +100,10 @@ export default class EmojiProvider {
                 className: 'emoji-set-google emoji-type-image',
             },
             mart: emojiRaw,
+            matchDetail: {
+                index,
+                match,
+            }
         };
         return emoji;
     }

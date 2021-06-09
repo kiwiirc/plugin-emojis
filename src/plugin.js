@@ -21,6 +21,8 @@ kiwi.plugin('emojis', (kiwi) => {
     window['plugin-emojis'].emojiIndex = emojiIndex;
 
     window['plugin-emojis'].getBestAscii = (emoji) => {
+        console.log('emoji', emoji);
+        return emoji.native;
         if (emoji.emoticons && emoji.emoticons.length > 0) {
             for (let i = 0; i < emoji.emoticons.length; i++) {
                 // Try to find a emoticon starting with a colon
