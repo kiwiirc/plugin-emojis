@@ -230,7 +230,10 @@ kiwi.plugin('emoji', function (kiwi, log) {
         methods: {
             onEmojiSelected (emoji) {
                 this.$nextTick(function () {
-                    var ircInput = emojiTool.kiwi.controlinput.$refs.input;
+                    let ircInput = (emojiTool.kiwi) ?
+                        emojiTool.kiwi.controlinput.$refs.input :
+                        emojiTool.controlinput.$refs.input;
+
                     if(this.useNative) {
                         ircInput.insertText(emoji.native);
                     } else {
