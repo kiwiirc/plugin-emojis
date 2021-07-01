@@ -230,11 +230,12 @@ kiwi.plugin('emoji', function (kiwi, log) {
         methods: {
             onEmojiSelected (emoji) {
                 this.$nextTick(function () {
+                    var ircInput = emojiTool.kiwi.controlinput.$refs.input;
                     if(this.useNative) {
-                        emojiTool.controlinput.$refs.input.insertText(emoji.native);
+                        ircInput.insertText(emoji.native);
                     } else {
                         let img = createElementFromHTML(emojione.unicodeToImage(emoji.native));
-                        emojiTool.controlinput.$refs.input.addImg(emoji.native, img.src);
+                        ircInput.addImg(emoji.native, img.src);
                     }
                 });
             }
