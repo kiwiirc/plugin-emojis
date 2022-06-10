@@ -11,7 +11,7 @@ if (window.mobilecheck() || kiwi.state.ui.is_touch) {
     let script = document.createElement('script');
     let basePath = '';
     kiwi.state.setting('plugins').forEach((e) => {
-        if (e.name === 'emoji') {
+        if (e.name === 'emoji' || e.url.match('plugin-emoji-prelim.min.js$')) {
             basePath = e.url.split('/');
             basePath.pop();
             basePath = basePath.join('/');
