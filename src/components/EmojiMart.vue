@@ -14,10 +14,10 @@
 import { Picker } from 'emoji-mart-vue-fast';
 
 export default {
-    props: ['ircinput'],
     components: {
         Picker,
     },
+    props: ['ircinput'],
     data() {
         return {
             useNative: false,

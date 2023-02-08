@@ -1,11 +1,9 @@
 /* global kiwi:true */
 
-import * as config from './config.js';
-import * as EmojiData from 'emoji-mart-vue-fast/data/google.json';
 import { EmojiIndex } from 'emoji-mart-vue-fast';
 import 'emoji-mart-vue-fast/css/emoji-mart.css';
-import platform from 'platform';
-import GraphemeSplitter from 'grapheme-splitter';
+import EmojiData from 'emoji-mart-vue-fast/data/google.json';
+import * as config from './config.js';
 import EmojiInputTool from './components/Emoji.vue';
 import EmojiMart from './components/EmojiMart.vue';
 import EmojiProvider from './libs/EmojiProvider.js';
@@ -35,17 +33,17 @@ kiwi.plugin('emojis', (kiwi) => {
         return ':' + emoji.short_names.reduce((a, b) => a.length <= b.length ? a : b) + ':';
     };
 
-    const emojiPicker = kiwi.Vue.extend(EmojiMart);
+    const EmojiPicker = kiwi.Vue.extend(EmojiMart);
 
     kiwi.replaceModule('components/inputtools/Emoji', EmojiInputTool);
 
     kiwi.state.$once('network.connecting', () => {
         // Create new picker and pre-mount it
-        window['plugin-emojis'].emojiPicker = new emojiPicker();
+        window['plugin-emojis'].emojiPicker = new EmojiPicker();
         window['plugin-emojis'].emojiPicker.$mount();
 
         // Preload emoji sheet
-        const img = document.createElement("IMG");
+        const img = document.createElement('img');
         img.className = 'emoji-set-google emoji-type-image';
         img.style = 'width: 1px; height: 1px; position: absolute; left: -10px;';
         document.body.appendChild(img);
@@ -59,4 +57,3 @@ kiwi.plugin('emojis', (kiwi) => {
         });
     });
 });
-

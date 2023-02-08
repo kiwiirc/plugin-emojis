@@ -52,16 +52,22 @@ export default class EmojiProvider {
 
     getEmoji(word) {
         console.log('getEmoji', word);
+        const t0 = performance.now();
         let emojiRaw = null;
         let index = 0;
         let match = '';
 
-        if (this.emojiIndex._emoticons.hasOwnProperty && this.emojiIndex._emoticons.hasOwnProperty(word)) {
+        /* eslint-disable no-underscore-dangle */
+        if (
+            this.emojiIndex._emoticons.hasOwnProperty
+            && this.emojiIndex._emoticons.hasOwnProperty(word)
+        ) {
             emojiRaw = this.emojiIndex.findEmoji(this.emojiIndex._emoticons[word]);
             match = word;
         }
+        /* eslint-enable no-underscore-dangle */
 
-        if (!emojiRaw && word.indexOf(':') === 0 && word.lastIndexOf(':') === word.length -1) {
+        if (!emojiRaw && word.indexOf(':') === 0 && word.lastIndexOf(':') === word.length - 1) {
             emojiRaw = this.emojiIndex.findEmoji(word);
             match = word;
         }
@@ -73,7 +79,9 @@ export default class EmojiProvider {
 
         if (!emojiRaw && /\p{Extended_Pictographic}/u.test(word)) {
             let graphemes = this.splitter.splitGraphemes(word);
-            for (const grapheme of graphemes) {
+            console.log('graphemes', graphemes, typeof graphemes);
+            for (let i = 0; i < graphemes.length; i++) {
+                const grapheme = graphemes[i];
                 console.log('grapheme', grapheme);
                 let emoji = this.emojiIndex.nativeEmoji(grapheme);
                 if (emoji) {
@@ -86,6 +94,7 @@ export default class EmojiProvider {
             }
         }
 
+        console.log(`getEmoji took ${performance.now() - t0} milliseconds.`);
 
         if (!emojiRaw) {
             return false;
