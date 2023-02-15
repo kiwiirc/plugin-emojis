@@ -88,8 +88,18 @@ export default {
 <style>
 .kiwi-emoji-mart {
     position: absolute;
-    bottom: 22px;
-    right: 20px;
+    bottom: 4px;
+    right: 0;
     z-index: 10;
+}
+
+.kiwi-controlinput--show-tools--inline .kiwi-emoji-mart {
+    right: 20px;
+}
+
+@media screen and (max-width: 769px) {
+    .kiwi-emoji-mart {
+        right: 4px;
+    }
 }
 </style>

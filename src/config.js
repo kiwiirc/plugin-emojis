@@ -8,9 +8,10 @@ let defaultConfig = {
     pickerProps: {
         emoji: 'point_up',
         title: '',
+        perLine: 8,
     },
     frequentlyUsedList: undefined,
-    frequentlyUsedLength: 18,
+    frequentlyUsedLength: 16,
     categoryInclude: undefined,
     categoryExclude: undefined,
     customEmojis: [
