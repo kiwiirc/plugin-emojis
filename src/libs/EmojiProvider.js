@@ -1,115 +1,125 @@
 /* global kiwi:true */
 
 import GraphemeSplitter from 'grapheme-splitter';
+import * as config from '../config.js';
 
 const graphemeSplitter = new GraphemeSplitter();
 let emojiListMap;
 
-export default class EmojiProvider {
-    constructor(emojiIndex) {
-        this.emojiIndex = emojiIndex;
-
-        if (!emojiListMap) {
-            const emojiList = kiwi.state.setting('emojis');
-            emojiListMap = getEmojiListMap(emojiList, emojiIndex);
-        }
+export function matchEmoji(word) {
+    const emojis = this.getEmojis(word);
+    if (!emojis.length) {
+        return false;
     }
 
-    static setEmojiListMap(newMap) {
-        Object.assign(emojiListMap, newMap);
-    }
+    const matchObjs = [];
 
-    matchEmoji(word) {
-        const emojis = this.getEmojis(word);
-        if (!emojis.length) {
-            return false;
-        }
-
-        const matchObjs = [];
-
-        emojis.forEach((emoji) => {
-            matchObjs.push({
-                index: emoji.matchDetail.index,
-                match: emoji.matchDetail.match,
-                type: 'emoji',
-                meta: {
-                    emoji: emoji,
-                },
-            });
+    emojis.forEach((emoji) => {
+        matchObjs.push({
+            index: emoji.matchDetail.index,
+            match: emoji.matchDetail.match,
+            type: 'emoji',
+            meta: {
+                emoji: emoji,
+            },
         });
+    });
 
-        return matchObjs;
+    return matchObjs;
+}
+
+export function blockToHtml(block, isSingle, showEmoticons) {
+    if (!showEmoticons) {
+        return block.content;
     }
 
-    blockToHtml(block, isSingle, showEmoticons) {
-        if (!showEmoticons) {
-            return block.content;
-        }
+    const emoji = block.meta.emoji;
+    const html = [`<img src="${emoji.url}" alt="${block.content}"`];
 
-        const emoji = block.meta.emoji;
-        const classes = 'kiwi-messagelist-emoji emoji-set-google emoji-type-image' + (isSingle ? ' kiwi-messagelist-emoji--single' : '');
-        const src = 'data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7';
-        const style = `background-position: ${emoji.mart.getPosition()}; height: 1.2em; vertical-align: -0.3em;`;
-        return `<img class="${classes}" src="${src}" alt="${block.content}" title="${block.content}" style="${style}" />`;
+    const imageTitle = config.setting('imageTitle');
+    if (imageTitle && emoji.mart[imageTitle]) {
+        html.push(`title="${emoji.mart[imageTitle]}"`);
     }
 
-    getEmojis(word) {
-        // eslint-disable-next-line no-underscore-dangle
-        const emoticons = this.emojiIndex._emoticons;
-        const emojis = [];
-        let emojiRaw = null;
-        let index = 0;
-        let match = '';
+    const classes = ['kiwi-messagelist-emoji'];
+    if (isSingle) {
+        classes.push('kiwi-messagelist-emoji--single');
+    }
+    if (emoji.imgProps.className) {
+        classes.push(emoji.imgProps.className);
+    }
+    html.push(`class="${classes.join(' ')}"`);
 
-        if (emoticons.hasOwnProperty(word)) {
-            emojiRaw = this.emojiIndex.findEmoji(emoticons[word]);
-            match = word;
-        } else if (emojiListMap.hasOwnProperty(word)) {
-            emojiRaw = this.emojiIndex.findEmoji(emojiListMap[word]);
-            match = word;
-        } else if (word.indexOf(':') === 0 && word.lastIndexOf(':') === word.length - 1) {
-            emojiRaw = this.emojiIndex.findEmoji(word);
-            match = word;
-        } else {
-            emojiRaw = this.emojiIndex.nativeEmoji(word);
-            match = word;
-        }
+    if (emoji.imgProps.style) {
+        html.push(`style="${emoji.imgProps.style}"`);
+    }
 
-        if (emojiRaw) {
-            emojis.push(makeEmojiObj(
-                emojiRaw,
-                match,
-                index,
-            ));
-        } else if (/\p{Extended_Pictographic}/u.test(word)) {
-            const graphemes = graphemeSplitter.splitGraphemes(word);
-            for (let i = 0; i < graphemes.length; i++) {
-                const grapheme = graphemes[i];
-                const emoji = this.emojiIndex.nativeEmoji(grapheme);
-                if (!emoji) {
-                    continue;
-                }
-                const graphemeIndex = graphemes.slice(0, i).reduce((a, g) => a + g.length, 0);
-                emojis.push(makeEmojiObj(
-                    emoji,
-                    grapheme,
-                    graphemeIndex,
-                ));
+    html.push('/>');
+
+    return html.join(' ');
+}
+
+export function getEmojis(word) {
+    const emojiIndex = kiwi['plugin-emojis'].emojiIndex;
+    if (!emojiListMap) {
+        const emojiList = kiwi.state.setting('emojis');
+        emojiListMap = getEmojiListMap(emojiList, emojiIndex);
+    }
+
+    // eslint-disable-next-line no-underscore-dangle
+    const emoticons = emojiIndex._emoticons;
+    const emojis = [];
+    let emojiRaw = null;
+    let index = 0;
+    let match = '';
+
+    if (emoticons.hasOwnProperty(word)) {
+        emojiRaw = emojiIndex.findEmoji(emoticons[word]);
+        match = word;
+    } else if (emojiListMap.hasOwnProperty(word)) {
+        emojiRaw = emojiIndex.findEmoji(emojiListMap[word]);
+        match = word;
+    } else if (word.indexOf(':') === 0 && word.lastIndexOf(':') === word.length - 1) {
+        emojiRaw = emojiIndex.findEmoji(word);
+        match = word;
+    } else {
+        emojiRaw = emojiIndex.nativeEmoji(word);
+        match = word;
+    }
+
+    if (emojiRaw) {
+        emojis.push(makeEmojiObj(
+            emojiRaw,
+            match,
+            index,
+        ));
+    } else if (/\p{Extended_Pictographic}/u.test(word)) {
+        const graphemes = graphemeSplitter.splitGraphemes(word);
+        for (let i = 0; i < graphemes.length; i++) {
+            const grapheme = graphemes[i];
+            const emoji = emojiIndex.nativeEmoji(grapheme);
+            if (!emoji) {
+                continue;
             }
+            const graphemeIndex = graphemes.slice(0, i).reduce((a, g) => a + g.length, 0);
+            emojis.push(makeEmojiObj(
+                emoji,
+                grapheme,
+                graphemeIndex,
+            ));
         }
-
-        return emojis;
     }
+
+    return emojis;
 }
 
 function makeEmojiObj(emojiRaw, match, index) {
-    return {
-        ascii: match, // emojiRaw.native
-        code: emojiRaw.colons,
+    const emojiObj = {
+        ascii: match,
         url: 'data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7',
         imgProps: {
             style: `background-position: ${emojiRaw.getPosition()}; height: 1.2em; vertical-align: -0.3em;`,
-            className: 'emoji-set-google emoji-type-image',
+            className: `emoji-set-${config.setting('emojiSet')} emoji-type-image`,
         },
         mart: emojiRaw,
         matchDetail: {
@@ -117,6 +127,13 @@ function makeEmojiObj(emojiRaw, match, index) {
             match,
         },
     };
+
+    if (emojiRaw.imageUrl) {
+        emojiObj.url = emojiRaw.imageUrl;
+        emojiObj.imgProps = {};
+    }
+
+    return emojiObj;
 }
 
 function getEmojiListMap(emojiList, emojiIndex) {

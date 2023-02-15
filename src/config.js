@@ -1,9 +1,28 @@
 /* global kiwi:true */
-/* global _:true */
 
 let configBase = 'plugin-emojis';
 let defaultConfig = {
-    sendNativeEmojis: false,
+    sendNativeEmojis: true,
+    imageTitle: 'name', // 'name', 'colons', 'native', ''
+    emojiSet: 'google', // 'apple', 'google', 'twitter', 'facebook', 'native'
+    pickerProps: {
+        emoji: 'point_up',
+        title: '',
+    },
+    frequentlyUsedList: undefined,
+    frequentlyUsedLength: 18,
+    categoryInclude: undefined,
+    categoryExclude: undefined,
+    customEmojis: [
+        {
+            name: 'Kiwi IRC',
+            short_names: ['kiwiirc'],
+            text: '',
+            emoticons: [],
+            keywords: [],
+            imageUrl: 'static/favicon.png',
+        },
+    ],
 };
 
 export function setDefaults(kiwi) {

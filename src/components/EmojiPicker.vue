@@ -1,9 +1,8 @@
 <template>
     <picker
-        set="google"
+        v-bind="pickerProps"
+        :set="emojiSet"
         :data="emojiIndex"
-        :title="titleText"
-        emoji="point_up"
         class="kiwi-emoji-mart"
         @select="onEmojiSelected"
     />
@@ -13,6 +12,7 @@
 /* global kiwi:true */
 
 import { Picker } from 'emoji-mart-vue-fast';
+import * as config from '../config.js';
 
 export default {
     components: {
@@ -28,31 +28,68 @@ export default {
         emojiIndex() {
             return kiwi['plugin-emojis'].emojiIndex;
         },
+        pickerProps() {
+            return config.setting('pickerProps');
+        },
+        emojiSet() {
+            return config.setting('emojiSet');
+        },
     },
     methods: {
+        getBestAscii(emoji) {
+            if (config.setting('sendNativeEmojis') && emoji.native) {
+                return emoji.native;
+            }
+
+            if (emoji.colons.includes('::')) {
+                // Emoji has skin tone, always use colons
+                return emoji.colons;
+            }
+
+            if (emoji.emoticons && emoji.emoticons.length > 0) {
+                // Emoji has emoticons find the best
+                for (let i = 0; i < emoji.emoticons.length; i++) {
+                    // Try to find a emoticon starting with a colon
+                    if (emoji.emoticons[i].indexOf(':') === 0) {
+                        return emoji.emoticons[i];
+                    }
+                }
+                return emoji.emoticons[0];
+            }
+
+            // No emoticon was found, use colons
+            return emoji.colons;
+        },
         onEmojiSelected(emoji) {
             console.log('onEmojiSelected', emoji);
+
+            if (emoji.imageUrl) {
+                // custom emojis
+                this.ircinput.addImg(
+                    this.getBestAscii(emoji),
+                    emoji.imageUrl,
+                );
+                return;
+            }
+
             this.ircinput.addImg(
-                kiwi['plugin-emojis'].getBestAscii(emoji),
+                this.getBestAscii(emoji),
                 'data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7',
                 {
                     style: `background-position: ${emoji.getPosition()}; height: 1.2em; vertical-align: -0.3em;`,
-                    className: 'emoji-set-google emoji-type-image',
+                    className: `emoji-set-${config.setting('emojiSet')} emoji-type-image`,
                 },
             );
         },
     },
 };
-
 </script>
 
 <style>
-
 .kiwi-emoji-mart {
     position: absolute;
     bottom: 22px;
     right: 20px;
     z-index: 10;
 }
-
 </style>
