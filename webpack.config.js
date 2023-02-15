@@ -37,10 +37,13 @@ module.exports = {
     plugins: [
         new VueLoaderPlugin(),
     ],
-    devtool: makeSourceMap ? 'source-map' : '',
+    devtool: makeSourceMap ? 'source-map' : undefined,
     devServer: {
-        filename: 'plugin-emojis.js',
-        contentBase: path.join(__dirname, "dist"),
-        port: 9000
+        static: path.join(__dirname, "dist"),
+        compress: true,
+        port: 9000,
+        headers: {
+            "Access-Control-Allow-Origin": "*"
+        }
     }
 };

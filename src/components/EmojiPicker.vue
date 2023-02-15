@@ -2,14 +2,15 @@
     <picker
         set="google"
         :data="emojiIndex"
-        :native="useNative"
         :title="titleText"
         emoji="point_up"
+        class="kiwi-emoji-mart"
         @select="onEmojiSelected"
     />
 </template>
 
 <script>
+/* global kiwi:true */
 
 import { Picker } from 'emoji-mart-vue-fast';
 
@@ -20,19 +21,19 @@ export default {
     props: ['ircinput'],
     data() {
         return {
-            useNative: false,
             titleText: 'test',
         };
     },
     computed: {
         emojiIndex() {
-            return window['plugin-emojis'].emojiIndex;
+            return kiwi['plugin-emojis'].emojiIndex;
         },
     },
     methods: {
         onEmojiSelected(emoji) {
+            console.log('onEmojiSelected', emoji);
             this.ircinput.addImg(
-                window['plugin-emojis'].getBestAscii(emoji),
+                kiwi['plugin-emojis'].getBestAscii(emoji),
                 'data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7',
                 {
                     style: `background-position: ${emoji.getPosition()}; height: 1.2em; vertical-align: -0.3em;`,
@@ -44,3 +45,14 @@ export default {
 };
 
 </script>
+
+<style>
+
+.kiwi-emoji-mart {
+    position: absolute;
+    bottom: 22px;
+    right: 20px;
+    z-index: 10;
+}
+
+</style>

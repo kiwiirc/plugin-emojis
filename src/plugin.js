@@ -4,24 +4,34 @@ import { EmojiIndex } from 'emoji-mart-vue-fast';
 import 'emoji-mart-vue-fast/css/emoji-mart.css';
 import EmojiData from 'emoji-mart-vue-fast/data/google.json';
 import * as config from './config.js';
-import EmojiInputTool from './components/Emoji.vue';
-import EmojiMart from './components/EmojiMart.vue';
+import EmojiPicker from './components/EmojiPicker.vue';
 import EmojiProvider from './libs/EmojiProvider.js';
 
 kiwi.plugin('emojis', (kiwi) => {
-    config.setDefaults();
+    config.setDefaults(kiwi);
 
     const provider = kiwi.require('libs/EmojiProvider');
     const emojiIndex = new EmojiIndex(EmojiData);
-    provider.registerPlugin(EmojiProvider, [emojiIndex]);
 
-    window['plugin-emojis'] = Object.create(null);
-    window['plugin-emojis'].emojiIndex = emojiIndex;
+    provider.registerPlugin(EmojiProvider, emojiIndex);
 
-    window['plugin-emojis'].getBestAscii = (emoji) => {
-        console.log('emoji', emoji);
-        return emoji.native;
+    console.log('emojiIndex', emojiIndex);
+
+    kiwi['plugin-emojis'] = Object.create(null);
+    kiwi['plugin-emojis'].emojiIndex = emojiIndex;
+
+    kiwi['plugin-emojis'].getBestAscii = (emoji) => {
+        if (config.setting('sendNativeEmojis')) {
+            return emoji.native;
+        }
+
+        if (emoji.colons.includes('::')) {
+            // Emoji has skin tone, always use colons
+            return emoji.colons;
+        }
+
         if (emoji.emoticons && emoji.emoticons.length > 0) {
+            // Emoji has emoticons find the best
             for (let i = 0; i < emoji.emoticons.length; i++) {
                 // Try to find a emoticon starting with a colon
                 if (emoji.emoticons[i].indexOf(':') === 0) {
@@ -30,18 +40,14 @@ kiwi.plugin('emojis', (kiwi) => {
             }
             return emoji.emoticons[0];
         }
-        return ':' + emoji.short_names.reduce((a, b) => a.length <= b.length ? a : b) + ':';
+
+        // No emoticon was found, use colons
+        return emoji.colons;
     };
 
-    const EmojiPicker = kiwi.Vue.extend(EmojiMart);
-
-    kiwi.replaceModule('components/inputtools/Emoji', EmojiInputTool);
+    kiwi.replaceModule('components/inputtools/Emoji', EmojiPicker);
 
     kiwi.state.$once('network.connecting', () => {
-        // Create new picker and pre-mount it
-        window['plugin-emojis'].emojiPicker = new EmojiPicker();
-        window['plugin-emojis'].emojiPicker.$mount();
-
         // Preload emoji sheet
         const img = document.createElement('img');
         img.className = 'emoji-set-google emoji-type-image';
