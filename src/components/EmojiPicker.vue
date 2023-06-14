@@ -19,11 +19,6 @@ export default {
         Picker,
     },
     props: ['ircinput'],
-    data() {
-        return {
-            titleText: 'test',
-        };
-    },
     computed: {
         emojiIndex() {
             return kiwi['plugin-emojis'].emojiIndex;
@@ -61,8 +56,6 @@ export default {
             return emoji.colons;
         },
         onEmojiSelected(emoji) {
-            console.log('onEmojiSelected', emoji);
-
             if (emoji.imageUrl) {
                 // custom emojis
                 this.ircinput.addImg(
