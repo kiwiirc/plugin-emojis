@@ -1,33 +1,56 @@
-const fs = require('fs');
 const path = require('path');
-const UglifyJsPlugin = require('uglifyjs-webpack-plugin');
+const VueLoaderPlugin = require('vue-loader/lib/plugin');
+const TerserPlugin = require('terser-webpack-plugin');
+const makeSourceMap = process.argv.indexOf('--srcmap') > -1;
 
 module.exports = {
-  mode: 'development',
-  entry: {
-    './dist/plugin-emoji.min': './plugin.js',
-    './dist/plugin-emoji-prelim.min': './prelim.js'
-  },
-  output: {
-    path: __dirname,
-    filename: '[name].js'
-  },
-  module: {
-    rules: [{
-      test: /\.js$/,
-      exclude: /node_modules/,
-      loader: 'babel-loader',
-      query: {
-        presets: ['@babel/preset-env'],
-      }
-    }]
-  },
-  devServer: {
-      contentBase: path.join(__dirname, "dist"),
-      compress: true,
-      host: "0.0.0.0"
-  },
-  plugins: [
-    new UglifyJsPlugin()
-  ]
+    mode: 'production',
+    entry: {
+        'emojis': './src/plugin.js',
+        'emojis-prelim': './src/prelim.js'
+    },
+    output: {
+        filename: 'plugin-[name].js',
+    },
+    module: {
+        rules: [
+            {
+                test: /\.vue$/,
+                loader: 'vue-loader',
+            },
+            {
+                test: /\.js$/,
+                use: [{loader: 'babel-loader'}],
+                include: [
+                    path.join(__dirname, 'src'),
+                ]
+            },
+            {
+                test: /\.css$/,
+                use: [ 'style-loader', 'css-loader' ]
+            },
+        ]
+    },
+    plugins: [
+        new VueLoaderPlugin(),
+    ],
+    performance: {
+        hints: false,
+        maxEntrypointSize: 512000,
+        maxAssetSize: 512000
+    },
+    optimization: {
+        minimizer: [new TerserPlugin({
+            extractComments: false,
+        })],
+    },
+    devtool: makeSourceMap ? 'source-map' : undefined,
+    devServer: {
+        static: path.join(__dirname, "dist"),
+        compress: true,
+        port: 9000,
+        headers: {
+            "Access-Control-Allow-Origin": "*"
+        }
+    }
 };
