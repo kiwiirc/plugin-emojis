@@ -1,6 +1,6 @@
 /* global kiwi:true */
 
-import { EmojiIndex } from 'emoji-mart-vue-fast';
+import { EmojiIndex } from 'emoji-mart-vue-fast/src';
 import 'emoji-mart-vue-fast/css/emoji-mart.css';
 import EmojiData from 'emoji-mart-vue-fast/data/all.json';
 import EmojiPicker from './components/EmojiPicker.vue';
