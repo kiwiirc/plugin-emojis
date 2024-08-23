@@ -1,8 +1,13 @@
 /* global kiwi:true */
 
-let configBase = 'plugin-emojis';
-let defaultConfig = {
+export const basePath = getBasePath();
+export const configBase = 'plugin-emojis';
+
+export const defaultConfig = {
     sendNativeEmojis: true,
+    parseEmoticons: true,
+    parseColons: true,
+    parseNative: true,
     imageTitle: 'name', // 'name', 'colons', 'native', ''
     emojiSet: 'google', // 'apple', 'google', 'twitter', 'facebook', 'native'
     pickerProps: {
@@ -24,6 +29,9 @@ let defaultConfig = {
             imageUrl: 'static/favicon.png',
         },
     ],
+    externalEnabled: true,
+    externalPicker: 'none', // 'all', 'hover', 'none'
+    externalUrl: basePath + configBase + '/animated/%CODEPOINT%.gif',
 };
 
 export function setDefaults(kiwi) {
@@ -40,4 +48,10 @@ export function getSetting(name) {
 
 export function setSetting(name, value) {
     return kiwi.state.setSetting(['settings', configBase, name].join('.'), value);
+}
+
+function getBasePath() {
+    const scripts = document.getElementsByTagName('script');
+    const scriptPath = scripts[scripts.length - 1].src;
+    return scriptPath.substring(0, scriptPath.lastIndexOf('/') + 1);
 }

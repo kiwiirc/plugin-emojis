@@ -3,6 +3,8 @@
         v-bind="pickerProps"
         :set="emojiSet"
         :data="emojiIndex"
+        :external-enabled="externalEnabled"
+        :external-picker="externalPicker"
         class="kiwi-emoji-mart"
         @select="onEmojiSelected"
     />
@@ -12,7 +14,7 @@
 /* global kiwi:true */
 
 import { Picker } from 'emoji-mart-vue-fast/src';
-import * as config from '../config.js';
+import * as config from '@/config.js';
 
 export default {
     components: {
@@ -28,6 +30,12 @@ export default {
         },
         emojiSet() {
             return config.setting('emojiSet');
+        },
+        externalEnabled() {
+            return config.setting('externalEnabled');
+        },
+        externalPicker() {
+            return config.setting('externalPicker');
         },
     },
     methods: {
@@ -56,14 +64,18 @@ export default {
             return emoji.colons;
         },
         onEmojiSelected(emoji) {
-            if (emoji.imageUrl) {
+            /* eslint-disable no-underscore-dangle */
+            if ((emoji._data.has_img_external && config.setting('externalEnabled')) || emoji.imageUrl) {
                 // custom emojis
                 this.ircinput.addImg(
                     this.getBestAscii(emoji),
-                    emoji.imageUrl,
+                    (emoji._data.has_img_external && config.setting('externalEnabled')
+                        ? emoji._data.externalUrl
+                        : emoji.imageUrl),
                 );
                 return;
             }
+            /* eslint-enable no-underscore-dangle */
 
             this.ircinput.addImg(
                 this.getBestAscii(emoji),

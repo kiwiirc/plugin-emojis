@@ -1,0 +1,108 @@
+/* Styles */
+.kiwi-emoji-mart {
+    .emoji-mart-search {
+        margin: 6px 0;
+    }
+
+    .emoji-mart-category-label {
+        position: sticky;
+    }
+
+    .emoji-mart-scroll {
+        scrollbar-width: thin;
+        scrollbar-color: var(--comp-scroller-fg, #cdcdcd) var(--comp-scroller-bg, #f0f0f0);
+
+        &::-webkit-scrollbar {
+            width: 8px;
+        }
+
+        &::-webkit-scrollbar-thumb {
+            background-color: var(--comp-scroller-fg, #cdcdcd);
+        }
+
+        &::-webkit-scrollbar-track {
+            background-color: var(--comp-scroller-bg, #f0f0f0);
+        }
+    }
+
+    .emoji-mart-anchors svg {
+        max-width: 18px;
+        max-height: 18px;
+    }
+
+    .emoji-mart-anchor,
+    .emoji-mart-skin-swatch {
+        cursor: pointer;
+    }
+
+    .emoji-mart-skin-swatch-selected,
+    .emoji-mart-skin-swatches-opened .emoji-mart-skin-swatch {
+        width: 24px;
+    }
+
+    .emoji-mart-skin-swatch-selected::after {
+        width: 8px;
+        height: 8px;
+        margin: -4px 0 0 -4px;
+    }
+
+    .emoji-mart-skin {
+        max-width: 20px;
+    }
+}
+
+/* Base theme */
+.kiwi-emoji-mart,
+.kiwi-emoji-mart .emoji-mart-skin-swatches {
+    background-color: var(--brand-default-bg);
+    color: var(--brand-default-fg);
+}
+
+.kiwi-emoji-mart,
+.kiwi-emoji-mart .emoji-mart-search input,
+.kiwi-emoji-mart .emoji-mart-category-label h3 {
+    font-size: 14px;
+}
+
+.kiwi-emoji-mart .emoji-mart-preview-name {
+    font-size: 12px;
+    word-break: normal;
+}
+
+.kiwi-emoji-mart,
+.kiwi-emoji-mart .emoji-mart-bar,
+.kiwi-emoji-mart .emoji-mart-skin-swatches,
+.kiwi-emoji-mart .emoji-mart-search input {
+    border-color: var(--comp-border);
+}
+
+.kiwi-emoji-mart .emoji-mart-category .emoji-mart-emoji:hover::before,
+.kiwi-emoji-mart .emoji-mart-emoji-selected::before {
+    background-color: #7f7f7f42;
+}
+
+.kiwi-emoji-mart {
+    .emoji-mart-anchor {
+        color: var(--brand-default-fg);
+    }
+
+    .emoji-mart-category-label h3 {
+        background-color: var(--brand-default-bg);
+    }
+}
+
+.kiwi-wrap[data-theme='radioactive'] .kiwi-emoji-mart {
+    background-color: #031e11ef;
+
+    .emoji-mart-scroll {
+        scrollbar-color: #14fdce #033e32;
+
+        &::-webkit-scrollbar-thumb {
+            background-color: #14fdce;
+        }
+
+        &::-webkit-scrollbar-track {
+            background-color: #033e32;
+        }
+    }
+}

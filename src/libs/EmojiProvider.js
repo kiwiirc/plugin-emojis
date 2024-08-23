@@ -1,7 +1,7 @@
 /* global kiwi:true */
 
 import GraphemeSplitter from 'grapheme-splitter';
-import * as config from '../config.js';
+import * as config from '@/config.js';
 
 const graphemeSplitter = new GraphemeSplitter();
 let emojiListMap;
@@ -66,6 +66,10 @@ export function getEmojis(word) {
         emojiListMap = getEmojiListMap(emojiList, emojiIndex);
     }
 
+    const parseEmoticons = config.setting('parseEmoticons');
+    const parseColons = config.setting('parseColons');
+    const parseNative = config.setting('parseNative');
+
     // eslint-disable-next-line no-underscore-dangle
     const emoticons = emojiIndex._emoticons;
     const emojis = [];
@@ -73,16 +77,16 @@ export function getEmojis(word) {
     let index = 0;
     let match = '';
 
-    if (emoticons.hasOwnProperty(word)) {
+    if (parseEmoticons && emoticons.hasOwnProperty(word)) {
         emojiRaw = emojiIndex.findEmoji(emoticons[word]);
         match = word;
-    } else if (emojiListMap.hasOwnProperty(word)) {
+    } else if (parseEmoticons && emojiListMap.hasOwnProperty(word)) {
         emojiRaw = emojiIndex.findEmoji(emojiListMap[word]);
         match = word;
-    } else if (word.indexOf(':') === 0 && word.lastIndexOf(':') === word.length - 1) {
+    } else if (parseColons && word.indexOf(':') === 0 && word.lastIndexOf(':') === word.length - 1) {
         emojiRaw = emojiIndex.findEmoji(word);
         match = word;
-    } else {
+    } else if (parseNative) {
         emojiRaw = emojiIndex.nativeEmoji(word);
         match = word;
     }
@@ -93,7 +97,7 @@ export function getEmojis(word) {
             match,
             index,
         ));
-    } else if (/\p{Extended_Pictographic}/u.test(word)) {
+    } else if (parseNative && /\p{Extended_Pictographic}/u.test(word)) {
         const graphemes = graphemeSplitter.splitGraphemes(word);
         for (let i = 0; i < graphemes.length; i++) {
             const grapheme = graphemes[i];
@@ -116,11 +120,6 @@ export function getEmojis(word) {
 function makeEmojiObj(emojiRaw, match, index) {
     const emojiObj = {
         ascii: match,
-        url: 'data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7',
-        imgProps: {
-            style: `background-position: ${emojiRaw.getPosition()}; height: 1.2em; vertical-align: -0.3em;`,
-            className: `emoji-set-${config.setting('emojiSet')} emoji-type-image`,
-        },
         mart: emojiRaw,
         matchDetail: {
             index,
@@ -128,9 +127,19 @@ function makeEmojiObj(emojiRaw, match, index) {
         },
     };
 
-    if (emojiRaw.imageUrl) {
-        emojiObj.url = emojiRaw.imageUrl;
+    /* eslint-disable no-underscore-dangle */
+    if ((emojiRaw._data.has_img_external && config.setting('externalEnabled')) || emojiRaw.imageUrl) {
+        emojiObj.url = emojiRaw._data.has_img_external
+            ? emojiRaw._data.externalUrl
+            : emojiRaw.imageUrl;
+
         emojiObj.imgProps = {};
+    } else {
+        emojiObj.url = 'data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7';
+        emojiObj.imgProps = {
+            style: `background-position: ${emojiRaw.getPosition()}; height: 1.2em; vertical-align: -0.3em;`,
+            className: `emoji-set-${config.setting('emojiSet')} emoji-type-image`,
+        };
     }
 
     return emojiObj;
