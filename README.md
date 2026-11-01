@@ -10,12 +10,12 @@ This plugin requires yarn.
     $ cd plugin-emojis
     $ yarn && yarn build
 
-Copy the built `dist/*.js` file to your kiwi plugins folders.
+Copy both built files (`dist/plugin-emojis-prelim.js` and `dist/plugin-emojis.js`) to your kiwi plugins folder.
 
 Next, add the following config parameter to `/your/kiwi/folder/static/config.json`
 
     "plugins": [
-        {"name": "emoji", "url": "static/plugins/plugin-emoji-prelim.js"}
+        {"name": "emoji", "url": "static/plugins/plugin-emojis-prelim.js"}
     ]
 
 
